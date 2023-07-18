@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.sbs.java.ssg.container.Container;
 import com.sbs.java.ssg.db.DBConnection;
+import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Member;
 
 public class MemberDao extends Dao {
@@ -40,5 +41,21 @@ public class MemberDao extends Dao {
 		}
 
 		return new Member(memberRow);
+	}
+
+	public Member getMember(int id) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(String.format("SELECT * "));
+		sb.append(String.format("FROM `member` "));
+		sb.append(String.format("WHERE id = '%d' ", id));
+
+		Map<String, Object> row = dbConnection.selectRow(sb.toString());
+
+		if (row.isEmpty()) {
+			return null;
+		}
+
+		return new Member(row);
 	}
 }
