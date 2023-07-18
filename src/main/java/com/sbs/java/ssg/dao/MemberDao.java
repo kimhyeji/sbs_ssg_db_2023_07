@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.sbs.java.ssg.container.Container;
 import com.sbs.java.ssg.db.DBConnection;
-import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Member;
 
 public class MemberDao extends Dao {
