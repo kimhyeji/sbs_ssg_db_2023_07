@@ -47,7 +47,30 @@ public class ArticleDao extends Dao {
 
 		return articles;
 	}
+	
+	public List<Article> getForPrintArticles(String boardCode, String searchkeyword) {
+		StringBuilder sb = new StringBuilder();
 
+		sb.append(String.format("SELECT A.* "));
+		sb.append(String.format("FROM `article` AS A "));
+		sb.append(String.format("INNER JOIN `board` AS B "));
+		sb.append(String.format("ON A.boardId = B.id "));
+		sb.append(String.format("WHERE B.`code` = '%s' ", boardCode));
+		if ( searchkeyword.length() > 0 ) {
+			sb.append(String.format("AND A.title LIKE '%%%s%%' ", searchkeyword));
+		}		
+		sb.append(String.format("ORDER BY A.id DESC "));
+
+		List<Article> articles = new ArrayList<>();
+		List<Map<String, Object>> rows = dbConnection.selectRows(sb.toString());
+
+		for (Map<String, Object> row : rows) {
+			articles.add(new Article(row));
+		}
+
+		return articles;
+	}
+	
 	public Article getArticle(int id) {
 		StringBuilder sb = new StringBuilder();
 
@@ -62,24 +85,6 @@ public class ArticleDao extends Dao {
 		}
 
 		return new Article(row);
-	}
-
-	public List<Article> getForPrintArticles(String searchkeyword) {
-		if (searchkeyword != null && searchkeyword.length() != 0) {
-			List<Article> forPrintArticles = new ArrayList<>();
-
-			if (searchkeyword.length() > 0) {
-				for (Article article : articles) {
-					if (article.title.contains(searchkeyword)) {
-						forPrintArticles.add(article);
-					}
-				}
-			}
-
-			return forPrintArticles;
-		}
-
-		return articles;
 	}
 
 	public Article getForPrintArticle(int id) {
