@@ -63,13 +63,13 @@ public class ArticleController extends Controller {
 		System.out.println("1. 공지사항 게시판");
 		System.out.println("2. 자유 게시판");
 		System.out.print("게시판 번호를 입력하세요) ");
-		
+
 		int boardCode = 0;
-		
-		try	{
+
+		try {
 			boardCode = sc.nextInt();
 			sc.nextLine();
-		} catch(InputMismatchException e) {
+		} catch (InputMismatchException e) {
 			System.out.println("잘못 입력하셨습니다.");
 			sc.nextLine();
 			return;
@@ -121,9 +121,29 @@ public class ArticleController extends Controller {
 		}
 	}
 
+	public int checkScNum() {
+		System.out.print("게시물 번호를 입력하세요) ");
+
+		int id = 0;
+
+		try {
+			id = sc.nextInt();
+			sc.nextLine();
+		} catch (InputMismatchException e) {
+			System.out.println("잘못 입력하셨습니다.");
+			sc.nextLine();
+			return 0;
+		}
+
+		return id;
+	}
+
 	public void showDetail() {
-		String[] commandBits = command.split(" ");
-		int id = Integer.parseInt(commandBits[2]);
+		int id = checkScNum();
+
+		if (id == 0) {
+			return;
+		}
 
 		Article foundArticle = articleService.getForPrintArticle(id);
 
@@ -143,8 +163,11 @@ public class ArticleController extends Controller {
 	}
 
 	public void doModify() {
-		String[] commandBits = command.split(" ");
-		int id = Integer.parseInt(commandBits[2]);
+		int id = checkScNum();
+
+		if (id == 0) {
+			return;
+		}
 
 		Article foundArticle = articleService.getArticle(id);
 
@@ -171,8 +194,11 @@ public class ArticleController extends Controller {
 	}
 
 	public void doDelete() {
-		String[] commandBits = command.split(" ");
-		int id = Integer.parseInt(commandBits[2]);
+		int id = checkScNum();
+
+		if (id == 0) {
+			return;
+		}
 
 		Article foundArticle = articleService.getArticle(id);
 
