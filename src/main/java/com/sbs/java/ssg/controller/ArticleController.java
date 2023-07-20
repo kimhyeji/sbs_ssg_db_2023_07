@@ -102,7 +102,10 @@ public class ArticleController extends Controller {
 		
 		String boardCode = Container.getSession().getCurrentBoard().getCode();
 		
-		List<Article> forPrintArticles = articleService.getForPrintArticles(boardCode, searchKeyword);
+		System.out.println(boardCode);
+		System.out.println(searchKeyword);
+		
+		List<Article> forPrintArticles = articleService.getForPrintArticles("notice", "제");
 		
 		if (forPrintArticles.size() == 0) {
 			System.out.println("검색결과가 존재하지 않습니다.");
