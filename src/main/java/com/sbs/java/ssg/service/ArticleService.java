@@ -6,6 +6,7 @@ import com.sbs.java.ssg.container.Container;
 import com.sbs.java.ssg.dao.ArticleDao;
 import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Board;
+import com.sbs.java.ssg.dto.Reply;
 
 public class ArticleService {
 	private ArticleDao articleDao;
@@ -45,6 +46,16 @@ public class ArticleService {
 
 	public void delete(int id) {
 		articleDao.delete(id);
+	}
+	
+	//	댓글 ============
+
+	public int replyWrite(int articleId, int memberId, String replyBody) {
+		return articleDao.replyWrite(articleId, memberId, replyBody);
+	}
+
+	public List<Reply> getForPrintArticleReplies(int articleId) {
+		return articleDao.getForPrintArticleReplies(articleId);
 	}
 
 }

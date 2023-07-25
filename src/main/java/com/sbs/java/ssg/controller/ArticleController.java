@@ -8,6 +8,7 @@ import com.sbs.java.ssg.container.Container;
 import com.sbs.java.ssg.dto.Article;
 import com.sbs.java.ssg.dto.Board;
 import com.sbs.java.ssg.dto.Member;
+import com.sbs.java.ssg.dto.Reply;
 import com.sbs.java.ssg.service.ArticleService;
 import com.sbs.java.ssg.service.MemberService;
 
@@ -98,14 +99,10 @@ public class ArticleController extends Controller {
 	}
 
 	public void showList() {
-		String searchKeyword = command.substring("article list".length()).trim();
-		
 		String boardCode = Container.getSession().getCurrentBoard().getCode();
+		String searchKeyword = command.substring("article list".length()).trim();		
 		
-		System.out.println(boardCode);
-		System.out.println(searchKeyword);
-		
-		List<Article> forPrintArticles = articleService.getForPrintArticles("notice", "제");
+		List<Article> forPrintArticles = articleService.getForPrintArticles(boardCode, searchKeyword);
 		
 		if (forPrintArticles.size() == 0) {
 			System.out.println("검색결과가 존재하지 않습니다.");
@@ -163,6 +160,38 @@ public class ArticleController extends Controller {
 		System.out.printf("제목 : %s\n", foundArticle.title);
 		System.out.printf("내용 : %s\n", foundArticle.body);
 		System.out.printf("조회 : %s\n", foundArticle.hit);
+		
+		System.out.println("댓글을 등록 하시겠습니까?");
+		System.out.println("1) 네 2) 아니오");
+		System.out.printf("입력) ");
+		String replyCheck = sc.nextLine();
+		
+		if ( replyCheck.equals("1") || replyCheck.equals("네")) {
+			if ( session.isLogined() == false ) {
+				System.out.println("로그인 후 이용 가능합니다.");
+				return;
+			}
+			
+			System.out.println("댓글을 입력해주세요.");
+			System.out.printf("입력) ");
+			String replyBody = sc.nextLine();
+			int memberId = session.getLoginedMember().getId();
+			
+			articleService.replyWrite(id, memberId, replyBody);
+			
+			System.out.println("댓글이 작성되었습니다.");
+			
+			List<Reply> forPrintArticleReplies = articleService.getForPrintArticleReplies(id);
+
+			System.out.printf("%d번 게시물 댓글\n", id);
+			System.out.println("번호 |   작성자  |  제목");
+			for (int i = forPrintArticleReplies.size() - 1; i >= 0; i--) {
+				Reply reply = forPrintArticleReplies.get(i);
+				Member member = memberService.getMember(reply.memberId);
+
+				System.out.printf("%4d | %6s | %s\n", reply.id, member.name, reply.body);
+			}
+		}
 	}
 
 	public void doModify() {
